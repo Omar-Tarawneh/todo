@@ -2,8 +2,8 @@
 
 ## Links
 
-- [pull-requrest](http:/#)
-- [Netlify](http:/#)
+- [pull-requrest](https://github.com/Omar-Tarawneh/todo/pull/1)
+- [Netlify](https://oht-todo.netlify.app/)
 
 ## UML
 
