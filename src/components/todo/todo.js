@@ -3,6 +3,7 @@ import TodoForm from './form.js';
 import TodoList from './list.js';
 import Navigation from './navBar.js';
 import Card from 'react-bootstrap/Card';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './todo.scss';
 
 function ToDo(props) {
