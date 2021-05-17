@@ -9,17 +9,32 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
   margin: 25px;
 }
 .card-body {
   color: black;
   background-color: white;
+  height: 535px;
 }
 .card-title {
   padding: 20px;
 }
 .list-todo {
+  overflow: scroll;
   width: 50%;
+}
+.list-todo::-webkit-scrollbar {
+  display: none;
+}
+.toast {
+  width: 100%;
+}
+.form-control-range {
+  width: 100%;
+}
+.btn {
+  margin-top: 10px;
 }
 .todo-details {
   display: flex;
@@ -37,14 +52,27 @@ main {
     padding: 1em;
   }
 }
+.badge {
+  margin-right: 20px;
+}
+.badge:hover {
+  cursor: pointer;
+}
+.difficulty {
+  text-align: end;
+}
+.list-group {
+  height: 40%;
+  align-items: center;
+  height: -webkit-fill-available;
+}
 
 .todo {
   width: 100%;
+  height: 500px;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  margin: 2em;
-
   form {
     display: flex;
     flex-direction: column;
