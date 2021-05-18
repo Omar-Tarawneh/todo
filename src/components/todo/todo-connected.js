@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import PageProvider from '../../context/pagination.js';
 import useAjax from '../hooks/useAjax1.js';
 import TodoForm from './form.js';
 import TodoList from './list.js';
@@ -30,30 +31,33 @@ const ToDo = () => {
   console.log(list);
   return (
     <>
-      <Navigation />
-      <main>
-        <Card style={{ width: '70rem' }} bg="dark" text="white">
-          <Card.Title as="h2" color="white">
-            To Do List Manager ({list.filter((item) => !item.complete).length})
-          </Card.Title>
-          <Card.Body bg="white">
-            <section className="todo">
-              <div>
-                <TodoForm handleSubmit={_addItem} getList={_getList} />
-              </div>
+      <PageProvider>
+        <Navigation />
+        <main>
+          <Card style={{ width: '70rem' }} bg="dark" text="white">
+            <Card.Title as="h2" color="white">
+              To Do List Manager ({list.filter((item) => !item.complete).length}
+              )
+            </Card.Title>
+            <Card.Body bg="white">
+              <section className="todo">
+                <div>
+                  <TodoForm handleSubmit={_addItem} getList={_getList} />
+                </div>
 
-              <div className="list-todo">
-                <TodoList
-                  list={list}
-                  handleComplete={_toggleComplete}
-                  handleDelete={_deleteItem}
-                  getList={_getList}
-                />
-              </div>
-            </section>
-          </Card.Body>
-        </Card>
-      </main>
+                <div className="list-todo">
+                  <TodoList
+                    list={list}
+                    handleComplete={_toggleComplete}
+                    handleDelete={_deleteItem}
+                    getList={_getList}
+                  />
+                </div>
+              </section>
+            </Card.Body>
+          </Card>
+        </main>
+      </PageProvider>
     </>
   );
 };
