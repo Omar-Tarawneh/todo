@@ -4,11 +4,16 @@ import Toast from 'react-bootstrap/Toast';
 import Badge from 'react-bootstrap/Badge';
 
 const TodoList = (props) => {
-  // const [showToast, setShow] = useState({ ...props.list });
   return (
     <ListGroup>
       {props.list.map((item) => (
-        <Toast key={item._id} onClose={() => props.handleDelete(item._id)}>
+        <Toast
+          key={item._id}
+          onClose={async () => {
+            await props.handleDelete(item);
+            await props.getList();
+          }}
+        >
           <Toast.Header>
             <img
               src="holder.js/20x20?text=%20"
@@ -17,7 +22,10 @@ const TodoList = (props) => {
             />
             <Badge
               pill
-              onClick={() => props.handleComplete(item._id)}
+              onClick={async () => {
+                await props.handleComplete(item);
+                await props.getList();
+              }}
               variant={item.complete ? 'danger' : 'success'}
             >
               {item.complete ? 'Completed' : 'Pending...'}
