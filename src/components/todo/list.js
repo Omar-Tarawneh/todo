@@ -1,12 +1,46 @@
-import React from 'react';
+import React, { useState, useContext } from 'react';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Toast from 'react-bootstrap/Toast';
 import Badge from 'react-bootstrap/Badge';
+import Pagination from 'react-bootstrap/Pagination';
+import { PageContext } from '../../context/pagination.js';
 
 const TodoList = (props) => {
+  // pagination logic srouce from Traversy Media :) <3 https://www.youtube.com/watch?v=IYCa1F-OWmk
+
+  const context = useContext(PageContext);
+  const [currentPage, setCurrentPage] = useState(context.startingPage);
+  const maxItems = context.itemCount;
+  // sorting hard-coded according to difficulty
+  const sortedList = props.list.sort((a, b) => b.difficulty - a.difficulty);
+  // display completed items first
+  const allList = sortedList.sort((a, b) => {
+    return a.complete === b.complete ? 0 : a ? -1 : 1;
+  });
+
+  // logic
+  const numOfPages = allList.length / maxItems + 1;
+  const indexOfLastItem = currentPage * maxItems;
+  const indexOfFirstItem = indexOfLastItem - maxItems;
+  const currentList = allList.slice(indexOfFirstItem, indexOfLastItem);
+  const nextPage = (num) => setCurrentPage(num);
+
+  const pageNums = [];
+  const activePage = currentPage;
+  for (let num = 1; num < numOfPages; num++) {
+    pageNums.push(
+      <Pagination.Item
+        key={num}
+        acitvePage={num === activePage}
+        onClick={() => nextPage(num)}
+      >
+        {num}
+      </Pagination.Item>
+    );
+  }
   return (
     <ListGroup>
-      {props.list.map((item) => (
+      {currentList.map((item) => (
         <Toast
           key={item._id}
           onClose={async () => {
@@ -40,6 +74,7 @@ const TodoList = (props) => {
           </Toast.Body>
         </Toast>
       ))}
+      <Pagination>{pageNums}</Pagination>
     </ListGroup>
   );
 };
