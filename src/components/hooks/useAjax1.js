@@ -1,28 +1,38 @@
-import { useState, useEffect } from 'react';
+import axios from 'axios';
 
-const useFetch = ({ api, method, url, data = null, config = null }) => {
-  const [response, setResponse] = useState(null);
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(true);
+const useAjax = (url) => {
+  const _fetchItems = async (method, url, item) => {
+    const response = await axios({
+      method: method,
+      url: url,
+      mode: 'cors',
+      cache: 'no-cache',
+      headers: { 'Content-Type': 'application/json' },
+      data: item,
+    });
+    return response.data;
+  };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      api[method](url, JSON.parse(config), JSON.parse(data))
-        .then((res) => {
-          setResponse(res.data);
-        })
-        .catch((err) => {
-          setError(err);
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    };
+  const _addItem = async (item) => {
+    await _fetchItems('post', url, item);
+  };
 
-    fetchData();
-  }, [api, method, url, data, config]);
+  const _deleteItem = async (item) => {
+    let urlItem = `${url}/${item._id}`;
+    await _fetchItems('delete', urlItem, item);
+  };
 
-  return { response, error, isLoading };
+  const _toggleComplete = async (item) => {
+    item.complete = !item.complete;
+    let urlItem = `${url}/${item._id}`;
+    await _fetchItems('put', urlItem, item);
+  };
+
+  const _getTodoItems = async () => {
+    return _fetchItems('get', url);
+  };
+
+  return [_addItem, _getTodoItems, _toggleComplete, _deleteItem];
 };
 
-export default useFetch;
+export default useAjax;

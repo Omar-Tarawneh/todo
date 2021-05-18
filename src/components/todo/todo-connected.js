@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import useAjax from '../hooks/useAjax.js';
+import useAjax from '../hooks/useAjax1.js';
 import TodoForm from './form.js';
 import TodoList from './list.js';
 import Navigation from './navBar.js';
@@ -7,16 +7,27 @@ import Card from 'react-bootstrap/Card';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './todo.scss';
 
-// const todoAPI = 'https://oht-auth-api.herokuapp.com/api/v1/todo';
+const todoAPI = 'https://oht-auth-api.herokuapp.com/api/v1/todo';
 
 const ToDo = () => {
   const [list, setList] = useState([]);
-  const [values, _addItem, _getTodoItems, _toggleComplete, _deleteItem] =
-    useAjax();
-  useEffect(() => {
-    _getTodoItems();
-    setList(values);
-  }, [values, _getTodoItems]);
+  const [_addItem, _getTodoItems, _toggleComplete, _deleteItem] =
+    useAjax(todoAPI);
+
+  const _getList = () => {
+    const fetchList = async () => {
+      try {
+        let data = await _getTodoItems();
+        setList(data);
+      } catch (error) {
+        console.error(error.message);
+      }
+    };
+    fetchList();
+  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(_getList, []);
+  console.log(list);
   return (
     <>
       <Navigation />
@@ -28,7 +39,7 @@ const ToDo = () => {
           <Card.Body bg="white">
             <section className="todo">
               <div>
-                <TodoForm handleSubmit={_addItem} />
+                <TodoForm handleSubmit={_addItem} getList={_getList} />
               </div>
 
               <div className="list-todo">
@@ -36,6 +47,7 @@ const ToDo = () => {
                   list={list}
                   handleComplete={_toggleComplete}
                   handleDelete={_deleteItem}
+                  getList={_getList}
                 />
               </div>
             </section>

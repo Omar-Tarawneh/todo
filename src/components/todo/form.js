@@ -8,7 +8,12 @@ function TodoFrom(props) {
   const [, handleInputChange, handleSubmit] = useForm(props.handleSubmit);
   return (
     <>
-      <Form onSubmit={handleSubmit}>
+      <Form
+        onSubmit={async (e) => {
+          await handleSubmit(e);
+          await props.getList();
+        }}
+      >
         <h3>Add Item</h3>
         <Form.Row>
           <Form.Group as={Col}>
