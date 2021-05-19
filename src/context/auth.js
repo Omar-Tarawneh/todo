@@ -21,10 +21,10 @@ export default function LoginProvider(props) {
     token,
   };
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // eslint-disable-next-line
   useEffect(() => {
     const token = cookie.load('auth');
     validateToken(token);
+    // eslint-disable-next-line
   }, []);
 
   function validateToken(token) {
