@@ -2,7 +2,7 @@
 
 ## Links
 
-- [pull-requrest](https://github.com/Omar-Tarawneh/todo/pull/5)
+- [pull-requrest](https://github.com/Omar-Tarawneh/todo/pull/6)
 - [Netlify](https://oht-todo.netlify.app/)
 
 ## UML
