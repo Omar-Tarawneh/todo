@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { LoginContext } from '../../context/auth';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
@@ -6,12 +7,17 @@ import useForm from '../hooks/useForm.js';
 
 function TodoFrom(props) {
   const [, handleInputChange, handleSubmit] = useForm(props.handleSubmit);
+  const userContext = useContext(LoginContext);
   return (
     <>
       <Form
         onSubmit={async (e) => {
-          await handleSubmit(e);
-          await props.getList();
+          if (userContext.user.capabilities.includes('create')) {
+            await handleSubmit(e);
+            await props.getList();
+          } else {
+            alert("You don't have a permession to create");
+          }
         }}
       >
         <h3>Add Item</h3>

@@ -5,6 +5,8 @@ import TodoForm from './form.js';
 import TodoList from './list.js';
 import Navigation from './navBar.js';
 import Card from 'react-bootstrap/Card';
+import LoginProvider from '../../context/auth.js';
+import Auth from './acl.js';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './todo.scss';
 
@@ -28,36 +30,41 @@ const ToDo = () => {
   };
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(_getList, []);
-  console.log(list);
   return (
     <>
-      <PageProvider>
-        <Navigation />
-        <main>
-          <Card style={{ width: '70rem' }} bg="dark" text="white">
-            <Card.Title as="h2" color="white">
-              To Do List Manager ({list.filter((item) => !item.complete).length}
-              )
-            </Card.Title>
-            <Card.Body bg="white">
-              <section className="todo">
-                <div>
-                  <TodoForm handleSubmit={_addItem} getList={_getList} />
-                </div>
+      <LoginProvider>
+        <PageProvider>
+          <Navigation />
+          <Auth capability="read">
+            <main>
+              <Card style={{ width: '70rem' }} bg="dark" text="white">
+                <Card.Title as="h2" color="white">
+                  To Do List Manager (
+                  {list.filter((item) => !item.complete).length})
+                </Card.Title>
+                <Card.Body bg="white">
+                  <section className="todo">
+                    <div>
+                      <Auth capability="create">
+                        <TodoForm handleSubmit={_addItem} getList={_getList} />
+                      </Auth>
+                    </div>
 
-                <div className="list-todo">
-                  <TodoList
-                    list={list}
-                    handleComplete={_toggleComplete}
-                    handleDelete={_deleteItem}
-                    getList={_getList}
-                  />
-                </div>
-              </section>
-            </Card.Body>
-          </Card>
-        </main>
-      </PageProvider>
+                    <div className="list-todo">
+                      <TodoList
+                        list={list}
+                        handleComplete={_toggleComplete}
+                        handleDelete={_deleteItem}
+                        getList={_getList}
+                      />
+                    </div>
+                  </section>
+                </Card.Body>
+              </Card>
+            </main>
+          </Auth>
+        </PageProvider>
+      </LoginProvider>
     </>
   );
 };

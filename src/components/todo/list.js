@@ -4,19 +4,21 @@ import Toast from 'react-bootstrap/Toast';
 import Badge from 'react-bootstrap/Badge';
 import Pagination from 'react-bootstrap/Pagination';
 import { PageContext } from '../../context/pagination.js';
+import { LoginContext } from '../../context/auth';
 
 const TodoList = (props) => {
   // pagination logic srouce from Traversy Media :) <3 https://www.youtube.com/watch?v=IYCa1F-OWmk
 
   const context = useContext(PageContext);
+  const userContext = useContext(LoginContext);
   const [currentPage, setCurrentPage] = useState(context.startingPage);
   const maxItems = context.itemCount;
   // sorting hard-coded according to difficulty
   const sortedList = props.list.sort((a, b) => b.difficulty - a.difficulty);
   // display completed items first
-  const allList = sortedList.sort((a, b) => {
-    return a.complete === b.complete ? 0 : a ? -1 : 1;
-  });
+  const completedList = sortedList.filter((item) => !item.complete);
+  const incompleteList = sortedList.filter((item) => item.complete);
+  const allList = [...completedList, ...incompleteList];
 
   // logic
   const numOfPages = allList.length / maxItems + 1;
@@ -26,12 +28,12 @@ const TodoList = (props) => {
   const nextPage = (num) => setCurrentPage(num);
 
   const pageNums = [];
-  const activePage = currentPage;
+  const activepage = currentPage;
   for (let num = 1; num < numOfPages; num++) {
     pageNums.push(
       <Pagination.Item
         key={num}
-        acitvePage={num === activePage}
+        acitvepage={num === activepage}
         onClick={() => nextPage(num)}
       >
         {num}
@@ -44,8 +46,12 @@ const TodoList = (props) => {
         <Toast
           key={item._id}
           onClose={async () => {
-            await props.handleDelete(item);
-            await props.getList();
+            if (userContext.user.capabilities.includes('delete')) {
+              await props.handleDelete(item);
+              await props.getList();
+            } else {
+              alert("You don't have the permession to delete :)");
+            }
           }}
         >
           <Toast.Header>
@@ -57,8 +63,12 @@ const TodoList = (props) => {
             <Badge
               pill
               onClick={async () => {
-                await props.handleComplete(item);
-                await props.getList();
+                if (userContext.user.capabilities.includes('update')) {
+                  await props.handleComplete(item);
+                  await props.getList();
+                } else {
+                  alert("You Don't have the permession to update :)");
+                }
               }}
               variant={item.complete ? 'danger' : 'success'}
             >
