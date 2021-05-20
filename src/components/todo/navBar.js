@@ -95,7 +95,7 @@ function Navigation(props) {
                     >
                       <option value="admin">Admin</option>
                       <option value="user">User</option>
-                      <option value="edito">Editor</option>
+                      <option value="editor">Editor</option>
                     </Form.Control>
                   </Col>
                   <Col>
